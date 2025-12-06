@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Font Tester</title>
+    <style>
+        /* ==========================
+           FONT DECLARATIONS
+           Add your local fonts here using @font-face
+           Make sure the font files exist in the fonts/ folder
+        ========================== */
+
+        @font-face {
+            font-family: 'Poppins';
+            src: url('fonts/Poppins-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Roboto';
+            src: url('fonts/Roboto-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Playfair';
+            src: url('fonts/PlayfairDisplay-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('fonts/Montserrat-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'OpenSans';
+            src: url('fonts/OpenSans-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Lato';
+            src: url('fonts/Lato-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* ==========================
+           GLOBAL STYLES
+        ========================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ==========================
+           CONTAINER & HEADER
+        ========================== */
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        /* ==========================
+           CONTROL PANEL
+        ========================== */
+
+        .controls {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Text Input Field */
+        #textInput {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        #textInput:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Slider and Color Picker Container */
+        .inline-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Range Slider Styling */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #fontSizeSlider {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            /* webkit-appearance: none; */
+        }
+
+        #fontSizeSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #fontSizeSlider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #5568d3;
+        }
+
+        #fontSizeSlider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        #fontSizeSlider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            background: #5568d3;
+        }
+
+        .size-value {
+            min-width: 50px;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1rem;
+        }
+
+        /* Color Picker Styling */
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #colorPicker {
+            width: 60px;
+            height: 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #colorPicker:hover {
+            border-color: #667eea;
+        }
+
+        .color-value {
+            font-weight: 600;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ==========================
+           FONT PREVIEW GRID
+        ========================== */
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        /* Individual Font Preview Card */
+        .font-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .font-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        /* Font Name Header */
+        .font-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        /* Preview Text */
+        .preview-text {
+            min-height: 60px;
+            line-height: 1.6;
+            color: #333;
+            word-wrap: break-word;
+            transition: all 0.3s ease;
+        }
+
+        /* Default placeholder text */
+        .preview-text.empty {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* ==========================
+           RESPONSIVE DESIGN
+        ========================== */
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .inline-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <h1>🔤 Local Font Tester</h1>
+        <p class="subtitle">Test and preview your downloaded fonts instantly</p>
+
+        <!-- Control Panel -->
+        <div class="controls">
+            <!-- Text Input -->
+            <div class="control-group">
+                <label for="textInput">Type Your Text:</label>
+                <input type="text" id="textInput" placeholder="Start typing to preview fonts..." autocomplete="off">
+            </div>
+
+            <!-- Font Size and Color Controls -->
+            <div class="inline-controls">
+                <!-- Font Size Slider -->
+                <div class="control-group">
+                    <label for="fontSizeSlider">Font Size:</label>
+                    <div class="slider-container">
+                        <input type="range" id="fontSizeSlider" min="12" max="72" value="24">
+                        <span class="size-value" id="sizeValue">24px</span>
+                    </div>
+                </div>
+
+                <!-- Color Picker -->
+                <div class="control-group">
+                    <label for="colorPicker">Text Color:</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="colorPicker" value="#333333">
+                        <span class="color-value" id="colorValue">#333333</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Font Preview Grid -->
+        <div class="preview-grid">
+            <!-- Font Card 1: Poppins -->
+            <div class="font-card">
+                <div class="font-name">Poppins</div>
+                <div class="preview-text" style="font-family: 'Poppins', sans-serif;">
+                    Type something to preview this font
+                </div>
+            </div>
+
+            <!-- Font Card 2: Roboto -->
+            <div class="font-card">
+                <div class="font-name">Roboto</div>
+                <div class="preview-text" style="font-family: 'Roboto', sans-serif;">
+                    Type something to preview this font
+                </div>
+            </div>
+
+            <!-- Font Card 3: Playfair Display -->
+            <div class="font-card">
+                <div class="font-name">Playfair Display</div>
+                <div class="preview-text" style="font-family: 'Playfair', serif;">
+                    Type something to preview this font
+                </div>
+            </div>
+
+            <!-- Font Card 4: Montserrat -->
+            <div class="font-card">
+                <div class="font-name">Montserrat</div>
+                <div class="preview-text" style="font-family: 'Montserrat', sans-serif;">
+                    Type something to preview this font
+                </div>
+            </div>
+
+            <!-- Font Card 5: Open Sans -->
+            <div class="font-card">
+                <div class="font-name">Open Sans</div>
+                <div class="preview-text" style="font-family: 'OpenSans', sans-serif;">
+                    Type something to preview this font
+                </div>
+            </div>
+
+            <!-- Font Card 6: Lato -->
+            <div class="font-card">
+                <div class="font-name">Lato</div>
+                <div class="preview-text" style="font-family: 'Lato', sans-serif;">
+                    Type something to preview this font
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================
+           DOM ELEMENT REFERENCES
+        ========================== */
+
+        const textInput = document.getElementById('textInput');
+        const fontSizeSlider = document.getElementById('fontSizeSlider');
+        const sizeValue = document.getElementById('sizeValue');
+        const colorPicker = document.getElementById('colorPicker');
+        const colorValue = document.getElementById('colorValue');
+        const previewTexts = document.querySelectorAll('.preview-text');
+
+        /* ==========================
+           DEFAULT TEXT FOR EMPTY STATE
+        ========================== */
+
+        const defaultText = 'Type something to preview this font';
+
+        /* ==========================
+           TEXT INPUT HANDLER
+           Updates all preview boxes as user types
+        ========================== */
+
+        textInput.addEventListener('input', (e) => {
+            const inputText = e.target.value;
+
+            previewTexts.forEach(preview => {
+                if (inputText.trim() === '') {
+                    // Show default placeholder text when input is empty
+                    preview.textContent = defaultText;
+                    preview.classList.add('empty');
+                } else {
+                    // Show user's input text
+                    preview.textContent = inputText;
+                    preview.classList.remove('empty');
+                }
+            });
+        });
+
+        /* ==========================
+           FONT SIZE SLIDER HANDLER
+           Adjusts text size dynamically
+        ========================== */
+
+        fontSizeSlider.addEventListener('input', (e) => {
+            const size = e.target.value;
+            sizeValue.textContent = `${size}px`;
+
+            previewTexts.forEach(preview => {
+                preview.style.fontSize = `${size}px`;
+            });
+        });
+
+        /* ==========================
+           COLOR PICKER HANDLER
+           Changes text color in real-time
+        ========================== */
+
+        colorPicker.addEventListener('input', (e) => {
+            const color = e.target.value;
+            colorValue.textContent = color.toUpperCase();
+
+            previewTexts.forEach(preview => {
+                // Only change color if not showing placeholder
+                if (!preview.classList.contains('empty')) {
+                    preview.style.color = color;
+                } else {
+                    // Keep placeholder in gray
+                    preview.style.color = '#aaa';
+                }
+            });
+        });
+
+        /* ==========================
+           INITIAL SETUP
+           Apply default styles on page load
+        ========================== */
+
+        previewTexts.forEach(preview => {
+            preview.classList.add('empty');
+            preview.style.fontSize = '24px';
+        });
+
+        /* ==========================
+           HOW TO ADD MORE FONTS:
+           
+           1. Add @font-face rule in CSS:
+              @font-face {
+                  font-family: 'YourFontName';
+                  src: url('fonts/YourFont-Regular.ttf') format('truetype');
+              }
+           
+           2. Add a new font card in HTML:
+              <div class="font-card">
+                  <div class="font-name">Your Font Name</div>
+                  <div class="preview-text" style="font-family: 'YourFontName', sans-serif;">
+                      Type something to preview this font
+                  </div>
+              </div>
+           
+           3. That's it! The JavaScript will automatically detect and update the new preview box.
+        ========================== */
+    </script>
+</body>
+
+</html>
